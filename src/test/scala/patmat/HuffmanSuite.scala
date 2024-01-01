@@ -63,16 +63,22 @@ class HuffmanSuite extends munit.FunSuite:
   }
 
   test("Decode of a short list with two letters") {
-    val codeTree = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
-    val codedMessage = List(0,1,1,0)
-    assertEquals(decode(codeTree, codedMessage), List('a','b','b','a'))
+    new TestTrees:
+      val codedMessage = List(0,1,1,0)
+      assertEquals(decode(t1, codedMessage), List('a','b','b','a'))
   }
 
   test("Enode a short list with two letters") {
-    val codeTree = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
     val originalMessage = List('a','b','b','a')
-    assertEquals(encode(codeTree)(originalMessage), List(0,1,1,0))
+    new TestTrees:
+      assertEquals(encode(t1)(originalMessage), List(0,1,1,0))
   }
+
+  // test("Enode a short list with QuickEncode") {
+  //   val codeTree = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
+  //   val originalMessage = List('a')
+  //   assertEquals(quickEncode(codeTree)(originalMessage), List(0))
+  // }  
 
 
   test("decode and encode a very short text should be identity (10pts)") {
@@ -83,6 +89,16 @@ class HuffmanSuite extends munit.FunSuite:
   test("decode and encode a rather long text should be identity ") {
     new TestTrees:
       assertEquals(decode(t2, encode(t2)("abdddbba".toList)), "abdddbba".toList)
+  }
+
+  test("convert a simple CodeTree to CodeTable") {
+    new TestTrees:
+      assertEquals(convert(t1), List(('a',List(0)),('b',List(1))))
+  }
+
+  test("convert another simple CodeTree to CodeTable") {
+    new TestTrees:
+      assertEquals(convert(t2), List(('a',List(0,0)),('b',List(0,1)),('d',List(1))))
   }  
 
 
