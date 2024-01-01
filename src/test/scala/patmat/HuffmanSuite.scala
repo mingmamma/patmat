@@ -43,10 +43,35 @@ class HuffmanSuite extends munit.FunSuite:
   test("combine of some leaf list (15pts)") {
     val leaflist1 = List(Leaf('e', 1), Leaf('t', 2))
     assertEquals(combine(leaflist1), List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3)))
+    
     val leaflist2 = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
-    assertEquals(combine(leaflist2), List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
-    val leaflist3 = List(Leaf('e', 3), Leaf('t', 2), Leaf('x', 4))
-    assertEquals(combine(leaflist3), List(Leaf('x',4)), Fork(Leaf('e',3),Leaf('t',2),List('e', 't'),5))    
+    assertEquals(combine(leaflist2), List(Fork(Leaf('e',1), Leaf('t',2), List('e', 't'),3), Leaf('x', 4)))
+    
+    val leaflist3 = List(Leaf('t', 2), Leaf('e', 3), Leaf('x', 4))
+    assertEquals(combine(leaflist3), List(Leaf('x',4), Fork(Leaf('t',2), Leaf('e',3), List('t', 'e'), 5)))
+  }
+
+  test("create a single codeTree from combining leaf lists") {
+    // leaflist1
+    assertEquals(createCodeTree(List('t', 't', 'e')), Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3))
+    
+    // leaflist2
+    assertEquals(createCodeTree(List('t','x','e','x','x','x','t')), Fork(Fork(Leaf('e',1), Leaf('t',2), List('e', 't'), 3), Leaf('x', 4), List('e', 't', 'x'), 7))
+  
+    // leaflist3
+    assertEquals(createCodeTree(List('t','x','e','x','e','x','x','e','t')), Fork(Leaf('x',4), Fork(Leaf('t',2), Leaf('e',3), List('t', 'e'), 5), List('x', 't', 'e'), 9))
+  }
+
+  test("Decode of a short list with two letters") {
+    val codeTree = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
+    val codedMessage = List(0,1,1,0)
+    assertEquals(decode(codeTree, codedMessage), List('a','b','b','a'))
+  }
+
+  test("Enode a short list with two letters") {
+    val codeTree = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
+    val originalMessage = List('a','b','b','a')
+    assertEquals(encode(codeTree)(originalMessage), List(0,1,1,0))
   }
 
 
@@ -54,6 +79,11 @@ class HuffmanSuite extends munit.FunSuite:
     new TestTrees:
       assertEquals(decode(t1, encode(t1)("ab".toList)), "ab".toList)
   }
+
+  test("decode and encode a rather long text should be identity ") {
+    new TestTrees:
+      assertEquals(decode(t2, encode(t2)("abdddbba".toList)), "abdddbba".toList)
+  }  
 
 
   import scala.concurrent.duration.*
