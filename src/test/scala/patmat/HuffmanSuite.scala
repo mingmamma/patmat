@@ -69,16 +69,16 @@ class HuffmanSuite extends munit.FunSuite:
   }
 
   test("Enode a short list with two letters") {
-    val originalMessage = List('a','b','b','a')
     new TestTrees:
+      val originalMessage = List('a','b','b','a')
       assertEquals(encode(t1)(originalMessage), List(0,1,1,0))
   }
 
-  // test("Enode a short list with QuickEncode") {
-  //   val codeTree = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
-  //   val originalMessage = List('a')
-  //   assertEquals(quickEncode(codeTree)(originalMessage), List(0))
-  // }  
+  test("Enode a short list with QuickEncode") {
+    new TestTrees:
+      val originalMessage = List('a')
+      assertEquals(quickEncode(t1)(originalMessage), List(0))
+  }  
 
 
   test("decode and encode a very short text should be identity (10pts)") {
